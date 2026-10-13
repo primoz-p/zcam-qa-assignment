@@ -1,1 +1,1 @@
-# zurich-qa-assignment
+# zcam-qa-assignment
