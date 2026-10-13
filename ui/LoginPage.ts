@@ -35,4 +35,10 @@ export class LoginPage {
     await expect(this.errorMessage).toBeVisible();
     await expect(this.errorMessage).toHaveText(expectedText);
   }
+
+  async logout(): Promise<void> {
+    await this.page.locator('.oxd-userdropdown-tab').click();
+    await this.page.locator('a:has-text("Logout")').click();
+    await this.page.waitForURL(/.*login/);
+  }
 }

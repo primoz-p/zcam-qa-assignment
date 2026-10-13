@@ -3,6 +3,7 @@ import {CONFIG} from '../config/env.config';
 import {LoginPage} from '../ui/LoginPage';
 import {DashboardPage} from '../ui/DashboardPage';
 import {AdminPage} from '../ui/AdminPage';
+import {PimPage} from "../ui/PimPage";
 import {PetApiClient} from '../api/PetApiClient';
 import {UserApiClient} from '../api/UserApiClient';
 
@@ -11,6 +12,7 @@ type CustomFixtures = {
   authenticatedPage: Page;
   dashboardPage: DashboardPage;
   adminPage: AdminPage;
+  pimPage: PimPage;
   petApi: PetApiClient;
   userApi: UserApiClient;
 };
@@ -37,6 +39,9 @@ export const test = base.extend<CustomFixtures>({
   },
   adminPage: async ({page}, use) => {
     await use(new AdminPage(page));
+  },
+  pimPage: async ({page}, use) => {
+    await use(new PimPage(page));
   },
   petApi: async ({}, use) => {
     const apiContext = await playwrightRequest.newContext({

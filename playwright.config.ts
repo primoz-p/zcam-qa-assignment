@@ -21,7 +21,7 @@ export default defineConfig({
   projects: [
     {
       name: 'UI: chromium',
-      testDir: './tests/ui',
+      testDir: 'tests/ui',
       use: {
         ...devices['Desktop Chrome'],
         baseURL: CONFIG.UI.BASE_URL
@@ -46,7 +46,7 @@ export default defineConfig({
     // },
     {
       name: 'UI: Firefox',
-      testDir: './tests/ui',
+      testDir: 'tests/ui',
       use: {
         ...devices['Desktop Firefox'],
         baseURL: CONFIG.UI.BASE_URL
@@ -54,7 +54,7 @@ export default defineConfig({
     },
     {
       name: 'API-Tests',
-      testDir: './tests/api',
+      testDir: 'tests/api',
       use: {
         baseURL: CONFIG.API.BASE_URL
       },

@@ -34,6 +34,10 @@ npm run test:ui
 # Execute just APIO tests test suite
 npm run test:api
 
+# To run specific test:
+npx playwright test tests/ui/admin.spec.ts -g "UI-ADMIN-05"
+npx playwright test tests/ui/employee.spec.ts 
+
 # View HTML Execution Report (display HTML report for last executed tests)
 npm run report
 ```
@@ -41,8 +45,10 @@ npm run report
 ## CI/CD
 
 Example of **[Github action](.github/workflows/playwright.yml)**
+
 ## Problems and notes
 
+- tested with node version 26.9.0
 - Because we are testing public web sites, it is possible that data from other users are returned. All main data should be as unique as possible.
 - Obviously, web page used to executed UI tests is running on a low resources and sometimes timeout occurs.
   Maybe, web site even slow down too much traffic from the same IP address.
@@ -54,5 +60,3 @@ Example of **[Github action](.github/workflows/playwright.yml)**
 - Probably some load tests should be executed too but I don't want to test that on this public servers.
   Example for API tests is **API-PET-11** in **[pet.spec.ts](tests/api/pet.spec.ts)**
   We could use **[Artillery](https://www.artillery.io/)** for that.
-  
-
