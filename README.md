@@ -48,4 +48,8 @@ npm run report
   For instance, to test create, update, get and delete pet I would rather create single more complex test case that 4 of them which must be executed
   in specific order.
 - Tests are at the end probably part of web application code repository and are executed on test deployment
+- Probably some load tests should be executed too but I don't want to test that on this public servers.
+  Example for API tests is **API-PET-11** in **[pet.spec.ts](tests/api/pet.spec.ts)**
+  We could use **[Artillery](https://www.artillery.io/)** for that.
+  
 

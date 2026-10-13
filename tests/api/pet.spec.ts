@@ -192,4 +192,21 @@ test.describe('Petstore API: Pet', () => {
     const responseGet3 = await petApi.getById(testPetId);
     expect(responseGet3.status()).toBe(404);
   });
+
+  test('API-PET-11: Simulate 50 concurrent API requests', async ({petApi}) => {
+    const responseCreate = await petApi.create(testPet);
+    expect(responseCreate.status()).toBe(200);
+
+    const concurrentRequests = 50;
+    const requests = Array.from({length: concurrentRequests}, (_, i) =>
+        petApi.getById(testPetId)
+    );
+
+    const responses = await Promise.all(requests);
+    for (const response of responses) {
+      expect(response.status()).toBe(200);
+      const body = await response.json();
+      expect(body.id).toBe(testPetId);
+    }
+  });
 });
