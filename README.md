@@ -38,6 +38,9 @@ npm run test:api
 npm run report
 ```
 
+## CI/CD
+
+Example of **[Github action](.github/workflows/playwright.yml)**
 ## Problems and notes
 
 - Because we are testing public web sites, it is possible that data from other users are returned. All main data should be as unique as possible.
