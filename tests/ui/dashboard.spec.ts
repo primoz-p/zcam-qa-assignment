@@ -1,4 +1,4 @@
-import {expect, test} from '../../fixtures/test.fixture';
+import {expect, test} from '../../fixtures/ui.test.fixture';
 import {CONFIG} from '../../config/env.config';
 
 test.describe('OrangeHRM UI: Dashboard', () => {

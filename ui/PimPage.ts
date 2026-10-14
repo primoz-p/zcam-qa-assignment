@@ -18,6 +18,8 @@ export class PimPage {
   }
 
   async addEmployee(firstName: string, lastName: string): Promise<void> {
+    console.debug(`Adding employee: ${firstName} ${lastName}`)
+
     await this.addEmployeeButton.click();
     await this.page.waitForURL(/.*pim\/addEmployee/);
     await this.firstNameInput.fill(firstName);

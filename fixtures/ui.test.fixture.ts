@@ -1,20 +1,17 @@
-import {Page, request as playwrightRequest, test as base} from '@playwright/test';
+import {Page, test as base} from '@playwright/test';
 import {CONFIG} from '../config/env.config';
+
 import {LoginPage} from '../ui/LoginPage';
 import {DashboardPage} from '../ui/DashboardPage';
 import {AdminPage} from '../ui/AdminPage';
 import {PimPage} from "../ui/PimPage";
-import {PetApiClient} from '../api/PetApiClient';
-import {UserApiClient} from '../api/UserApiClient';
 
 type CustomFixtures = {
   loginPage: LoginPage;
   authenticatedPage: Page;
   dashboardPage: DashboardPage;
   adminPage: AdminPage;
-  pimPage: PimPage;
-  petApi: PetApiClient;
-  userApi: UserApiClient;
+  pimPage: PimPage
 };
 
 export const test = base.extend<CustomFixtures>({
@@ -42,21 +39,7 @@ export const test = base.extend<CustomFixtures>({
   },
   pimPage: async ({page}, use) => {
     await use(new PimPage(page));
-  },
-  petApi: async ({}, use) => {
-    const apiContext = await playwrightRequest.newContext({
-      baseURL: CONFIG.API.BASE_URL,
-    });
-    await use(new PetApiClient(apiContext));
-    await apiContext.dispose();
-  },
-  userApi: async ({}, use) => {
-    const apiContext = await playwrightRequest.newContext({
-      baseURL: CONFIG.API.BASE_URL,
-    });
-    await use(new UserApiClient(apiContext));
-    await apiContext.dispose();
-  },
+  }
 });
 
 export {expect} from '@playwright/test';

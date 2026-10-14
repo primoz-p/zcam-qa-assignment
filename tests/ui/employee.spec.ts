@@ -1,4 +1,4 @@
-import {expect, test} from '../../fixtures/test.fixture';
+import {expect, test} from '../../fixtures/ui.test.fixture';
 
 test.describe('OrangeHRM UI: Employee', () => {
 
@@ -10,16 +10,15 @@ test.describe('OrangeHRM UI: Employee', () => {
                                                                                                                               loginPage,
                                                                                                                             }) => {
         const uniqueId = Date.now().toString();
-        const firstName = `TestFn_${uniqueId}`;
-        const lastName = `TestLn_${uniqueId}`;
+        const firstName = `ppTest_Fn_${uniqueId}`;
+        const lastName = `ppTes_tLn_${uniqueId}`;
         const fullName = `${firstName} ${lastName}`;
-        const username = `User_${uniqueId}`;
+        const username = `ppTest_User_${uniqueId}`;
         const password = `Pass123!_${uniqueId}`;
 
         // 1. Navigate to PIM module and create a new Employee
         await dashboardPage.navigateToPim();
         await authenticatedPage.waitForURL(/.*pim\/viewEmployeeList/);
-        console.debug(`Adding employee ${fullName}`)
         await pimPage.addEmployee(firstName, lastName);
 
         // 2. Navigate to Admin module and click "Add User"
@@ -28,20 +27,11 @@ test.describe('OrangeHRM UI: Employee', () => {
         await adminPage.addButton.click();
         await authenticatedPage.waitForURL(/.*admin\/saveSystemUser/);
 
-        // 3. Fill "Add User" form using the newly created Employee
-        console.debug(`Adding user ${username}`)
-        await adminPage.selectDropdownOption(adminPage.userRoleDropdown, 'Admin');
-        await adminPage.selectDropdownOption(adminPage.statusDropdown, 'Enabled');
-        await adminPage.selectEmployeeName(firstName, fullName);
+        // 3. Fill "Add User" for the newly created Employee
+        await adminPage.addUser(firstName, fullName, username, password);
 
-        await adminPage.newUsernameInput.fill(username);
-        await adminPage.passwordInput.fill(password);
-        await adminPage.confirmPasswordInput.fill(password);
-
-        // 4. Save and verify user appears in System Users list
-        await adminPage.saveButton.click();
+        // 4. Verify user appears in System Users list
         await authenticatedPage.waitForURL(/.*admin\/viewSystemUsers/);
-
         await adminPage.searchByUsername(username);
         await expect(adminPage.tableRows.first()).toContainText(username);
 

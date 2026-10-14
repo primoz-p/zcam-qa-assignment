@@ -1,4 +1,4 @@
-import {expect, test} from '../../fixtures/test.fixture';
+import {expect, test} from '../../fixtures/api.test.fixture';
 import {Pet} from '../../api/pet.model';
 
 test.describe('Petstore API: Pet', () => {

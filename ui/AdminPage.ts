@@ -45,6 +45,20 @@ export class AdminPage {
     await this.resetButton.click();
   }
 
+  async addUser(firstName: string, fullName: string, username: string, password: string): Promise<void> {
+    console.debug(`Adding user ${username}`)
+
+    await this.selectDropdownOption(this.userRoleDropdown, 'Admin');
+    await this.selectDropdownOption(this.statusDropdown, 'Enabled');
+    await this.selectEmployeeName(firstName, fullName);
+
+    await this.newUsernameInput.fill(username);
+    await this.passwordInput.fill(password);
+    await this.confirmPasswordInput.fill(password);
+
+    await this.saveButton.click();
+  }
+
   async selectDropdownOption(dropdownLocator: Locator, optionText: string): Promise<void> {
     await dropdownLocator.click();
     await this.page.locator('.oxd-select-option', {hasText: optionText}).click();
