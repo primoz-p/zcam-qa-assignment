@@ -21,17 +21,29 @@ test.describe('Petstore API: Pet', () => {
     status: statusAvailable
   };
 
+  function checkPet(pet: any, petName: string = dogName, petStatus: String = statusAvailable) {
+    expect(pet.id).toBe(testPetId);
+    expect(pet.name).toBe(petName);
+    expect(pet.category.name).toBe(dogCategoryName)
+    expect(pet.photoUrls.length).toBe(1);
+    expect(pet.photoUrls).toContain(photoUrl);
+    expect(pet.status).toBe(petStatus);
+  }
+
+  function checkPetsByStatus(pets: any, shouldExists: boolean = true) {
+    expect(Array.isArray(pets)).toBeTruthy();
+    expect(pets.length).toBeGreaterThanOrEqual(1);
+    const hasTestPet1 = pets.some((item: { id: number; }) => item.id === testPetId);
+    expect(hasTestPet1).toBe(shouldExists);
+  }
+
   test('API-PET-01: Create a new pet', async ({petApi}) => {
     const response = await petApi.create(testPet);
 
     expect(response.status()).toBe(200);
 
     const body = await response.json();
-    expect(body.id).toBe(testPetId);
-    expect(body.name).toBe(dogName);
-    expect(body.photoUrls.length).toBe(1);
-    expect(body.photoUrls).toContain(photoUrl);
-    expect(body.status).toBe(statusAvailable);
+    checkPet(body)
   });
 
   test('API-PET-02: get pet by ID', async ({petApi}) => {
@@ -40,11 +52,7 @@ test.describe('Petstore API: Pet', () => {
     expect(response.status()).toBe(200);
 
     const body = await response.json();
-    expect(body.id).toBe(testPetId);
-    expect(body.name).toBe(dogName);
-    expect(body.photoUrls.length).toBe(1);
-    expect(body.photoUrls).toContain(photoUrl);
-    expect(body.status).toBe(statusAvailable);
+    checkPet(body)
   });
 
   test('API-PET-03: Find pets by status "available"', async ({petApi}) => {
@@ -53,9 +61,7 @@ test.describe('Petstore API: Pet', () => {
     expect(response.status()).toBe(200);
 
     const body = await response.json();
-    expect(Array.isArray(body)).toBeTruthy();
-    expect(body.length).toBeGreaterThanOrEqual(1);
-
+    checkPetsByStatus(body)
   });
 
   test('API-PET-04: Find pets by status "sold"', async ({petApi}) => {
@@ -75,11 +81,7 @@ test.describe('Petstore API: Pet', () => {
 
     const responseGet = await petApi.getById(testPetId);
     const body = await responseGet.json();
-    expect(body.id).toBe(testPetId);
-    expect(body.name).toBe('UpdatedDogName');
-    expect(body.photoUrls.length).toBe(1);
-    expect(body.photoUrls).toContain(photoUrl);
-    expect(body.status).toBe(statusPending);
+    checkPet(body, 'UpdatedDogName', statusPending)
   });
 
   test('API-PET-06: Update existing pet status', async ({petApi}) => {
@@ -90,11 +92,7 @@ test.describe('Petstore API: Pet', () => {
 
     const responseGet = await petApi.getById(testPetId);
     const body = await responseGet.json();
-    expect(body.id).toBe(testPetId);
-    expect(body.name).toBe(dogName);
-    expect(body.photoUrls.length).toBe(1);
-    expect(body.photoUrls).toContain(photoUrl);
-    expect(body.status).toBe(statusSold);
+    checkPet(body, dogName, statusSold)
   });
 
   test('API-PET-07: Return 404 for non-existent pet ID', async ({petApi}) => {
@@ -125,38 +123,22 @@ test.describe('Petstore API: Pet', () => {
     const responseCreate = await petApi.create(testPet);
     expect(responseCreate.status()).toBe(200);
     const bodyCreate = await responseCreate.json();
-    expect(bodyCreate.id).toBe(testPetId);
-    expect(bodyCreate.name).toBe(dogName);
-    expect(bodyCreate.category.name).toBe(dogCategoryName)
-    expect(bodyCreate.photoUrls.length).toBe(1);
-    expect(bodyCreate.photoUrls).toContain(photoUrl);
-    expect(bodyCreate.status).toBe(statusAvailable);
+    checkPet(bodyCreate);
 
     const responseGet = await petApi.getById(testPetId);
     expect(responseGet.status()).toBe(200);
     const bodyGet = await responseGet.json();
-    expect(bodyGet.id).toBe(testPetId);
-    expect(bodyGet.name).toBe(dogName);
-    expect(bodyCreate.category.name).toBe(dogCategoryName)
-    expect(bodyGet.photoUrls.length).toBe(1);
-    expect(bodyGet.photoUrls).toContain(photoUrl);
-    expect(bodyGet.status).toBe(statusAvailable);
+    checkPet(bodyGet)
 
     const responseStatusAvailable1 = await petApi.getPetsByStatus(statusAvailable);
     expect(responseStatusAvailable1.status()).toBe(200);
     const bodyStatusAvailable1 = await responseStatusAvailable1.json();
-    expect(Array.isArray(bodyStatusAvailable1)).toBeTruthy();
-    expect(bodyStatusAvailable1.length).toBeGreaterThanOrEqual(1);
-    const hasTestPet1 = bodyStatusAvailable1.some((item: { id: number; }) => item.id === testPetId);
-    expect(hasTestPet1).toBe(true);
+    checkPetsByStatus(bodyStatusAvailable1);
 
     const responseStatusPending1 = await petApi.getPetsByStatus(statusPending);
     expect(responseStatusPending1.status()).toBe(200);
     const bodyStatusPending1 = await responseStatusPending1.json();
-    expect(Array.isArray(bodyStatusPending1)).toBeTruthy();
-    expect(bodyStatusPending1.length).toBeGreaterThanOrEqual(1);
-    const hasTestPet2 = bodyStatusPending1.some((item: { id: number; }) => item.id === testPetId);
-    expect(hasTestPet2).toBe(false);
+    checkPetsByStatus(bodyStatusPending1, false);
 
     const updatedPet: Pet = {...testPet, name: 'UpdatedDogName', status: statusPending};
     const responseUpdate = await petApi.update(updatedPet);
@@ -164,28 +146,17 @@ test.describe('Petstore API: Pet', () => {
 
     const responseGet2 = await petApi.getById(testPetId);
     const bodyGet2 = await responseGet2.json();
-    expect(bodyGet2.id).toBe(testPetId);
-    expect(bodyGet2.name).toBe('UpdatedDogName');
-    expect(bodyCreate.category.name).toBe(dogCategoryName)
-    expect(bodyGet2.photoUrls.length).toBe(1);
-    expect(bodyGet2.photoUrls).toContain(photoUrl);
-    expect(bodyGet2.status).toBe(statusPending);
+    checkPet(bodyGet2, 'UpdatedDogName', statusPending)
 
     const responseStatusAvailable2 = await petApi.getPetsByStatus(statusAvailable);
     expect(responseStatusAvailable2.status()).toBe(200);
     const bodyStatusAvailable2 = await responseStatusAvailable2.json();
-    expect(Array.isArray(bodyStatusAvailable2)).toBeTruthy();
-    expect(bodyStatusAvailable2.length).toBeGreaterThanOrEqual(2);
-    const hasTestPet3 = bodyStatusAvailable2.some((item: { id: number; }) => item.id === testPetId);
-    expect(hasTestPet3).toBe(false);
+    checkPetsByStatus(bodyStatusAvailable2, false);
 
     const responseStatusPending2 = await petApi.getPetsByStatus(statusPending);
     expect(responseStatusPending2.status()).toBe(200);
     const bodyStatusPending2 = await responseStatusPending2.json();
-    expect(Array.isArray(bodyStatusPending2)).toBeTruthy();
-    expect(bodyStatusPending2.length).toBeGreaterThanOrEqual(2);
-    const hasTestPet4 = bodyStatusPending2.some((item: { id: number; }) => item.id === testPetId);
-    expect(hasTestPet4).toBe(true);
+    checkPetsByStatus(bodyStatusPending2, true);
 
     const responseDelete = await petApi.delete(testPetId);
     expect(responseDelete.status()).toBe(200);

@@ -45,18 +45,25 @@ npm run report
 ## CI/CD
 
 Example of **[Github action](.github/workflows/playwright.yml)**
+Tests are executed on every push and PR to main and develop branches.
+During action tests resulta are also saved as artifacts, so they can be downloaded and check locally.
 
 ## Problems and notes
 
 - tested with node version 26.9.0
-- Because we are testing public web sites, it is possible that data from other users are returned. All main data should be as unique as possible.
+- Because we are testing public websites, it is possible that data from other users are returned. All main data should be as unique as possible.
 - Obviously, web page used to executed UI tests is running on a low resources and sometimes timeout occurs.
-  Maybe, web site even slow down too much traffic from the same IP address.
+  Maybe, website even slow down too much traffic from the same IP address.
 - To change UI tests environments used, update '**projects**' section in '**[playwright.config.ts](playwright.config.ts)**'
 - I prefer writing test case which prepare and clean the environment and are not dependent on other test cases.  
   For instance, to test create, update, get and delete pet I would rather create single more complex test case that 4 of them which must be executed
   in specific order.
-- Tests are at the end probably part of web application code repository and are executed on test deployment
+
+## Ideas for future
+
+- put test in repository where web page code is located and run test after deployment
 - Probably some load tests should be executed too but I don't want to test that on this public servers.
   Example for API tests is **API-PET-11** in **[pet.spec.ts](tests/api/pet.spec.ts)**
   We could use **[Artillery](https://www.artillery.io/)** for that.
+- implement more AI agentic work
+
